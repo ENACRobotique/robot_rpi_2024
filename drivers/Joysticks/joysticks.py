@@ -42,7 +42,8 @@ BATTLETRON = {
     "THETA_sens" : -1,
     "THETA_offset" : 0.1, #à régler
     "THETA_dead_zone": 0.1, # à régler
-    "frame":1, #bouton
+    "frame_robot":1, #bouton CARRÉ
+    "frame_table":3, #bouton ROND
     "theta_supra_luminique":12, #bouton
     "vitesse_supra_luminique": 11 #bouton
 }
@@ -105,9 +106,12 @@ class JoystickEcal ():
         
         print(self.message)
         self.speed_publisher.send(self.message)
-        if self.buttons[self.conf["frame"]]:
-            print("LA",self.buttons[self.conf["frame"]])
-            self.change_frame()
+        if self.buttons[self.conf["frame_robot"]]:
+            # print("LA",self.buttons[self.conf["frame_robot"]])
+            self.set_frame(FRAME_R)
+        if self.buttons[self.conf["frame_table"]]:
+            # print("LA",self.buttons[self.conf["frame_robot"]])
+            self.set_frame(FRAME_W)
 
     def set_mode(self, asserv, guidance):
         print(asserv,guidance)
@@ -117,14 +121,14 @@ class JoystickEcal ():
         mode.odometry = message_pb2.System.OdometryFlags.ODOMETRY_ENABLED
         self.Mode_pub.send(mode)
     
-    def change_frame(self):
+    def set_frame(self,frame):
         
-        if self.frame == FRAME_W:
+        if frame == FRAME_R:
             self.frame = FRAME_R
             print("mode ",message_pb2.System.GuidanceFlags.GUIDANCE_ROBOT_FRAME | message_pb2.System.GuidanceFlags.GUIDANCE_BASIC)
             self.set_mode(message_pb2.System.AsservFlags.ASSERV_POS,message_pb2.System.GuidanceFlags.GUIDANCE_ROBOT_FRAME | message_pb2.System.GuidanceFlags.GUIDANCE_BASIC)
         
-        elif self.frame == FRAME_R:
+        elif frame == FRAME_W:
             self.frame = FRAME_W
             self.set_mode(message_pb2.System.AsservFlags.ASSERV_POS,message_pb2.System.GuidanceFlags.GUIDANCE_BASIC)
         print("Frame 1W|0R = ", self.frame)
