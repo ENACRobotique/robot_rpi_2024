@@ -14,15 +14,16 @@ set(source_files
   src/ld06.cpp
 )
 
+set(PROTO_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/../../../proto)
+
 set(protobuf_files
-    ${CMAKE_CURRENT_SOURCE_DIR}../../../proto/lidar_data.proto
-    
+	${PROTO_DIR}/lidar_data.proto
 )
 
 
 add_executable(${PROJECT_NAME} ${source_files})
 
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/proto/ ${protobuf_files})
+PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${PROTO_DIR} ${protobuf_files})
 
 target_link_libraries(${PROJECT_NAME}
   eCAL::core
